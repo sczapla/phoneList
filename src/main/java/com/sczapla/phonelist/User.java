@@ -15,6 +15,11 @@ public class User {
         this.phone = splitLine[1];
     }
 
+    public User(String name, String phone) {
+        this.name = name;
+        this.phone = phone;
+    }
+    
     
     public String getName() {
         return name;
