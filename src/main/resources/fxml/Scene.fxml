@@ -9,7 +9,7 @@
 <?import javafx.scene.control.cell.*?>
 <?import javafx.collections.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="412.0" prefWidth="363.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sczapla.phonelist.FXMLController">
+<AnchorPane id="AnchorPane" prefHeight="458.0" prefWidth="363.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sczapla.phonelist.FXMLController">
     <children>
         <Label fx:id="label" layoutX="126" layoutY="120" minHeight="16" minWidth="69" />
         <Label layoutX="35.0" layoutY="38.0" prefHeight="21.0" prefWidth="57.0" text="Name" />
@@ -34,5 +34,7 @@
         <Button fx:id="btUpdate" layoutX="118.0" layoutY="131.0" mnemonicParsing="false" onAction="#addUpdate" text="Update" />
         <Button fx:id="btDelete" layoutX="208.0" layoutY="131.0" mnemonicParsing="false" onAction="#addDelete" prefHeight="31.0" prefWidth="69.0" text="Delete" />
       <TextField fx:id="txInfo" layoutX="33.0" layoutY="-1.0" prefHeight="31.0" prefWidth="303.0" />
+      <Button fx:id="btOpen" layoutX="251.0" layoutY="413.0" mnemonicParsing="false" onAction="#openFile" text="Open file" />
+      <Label fx:id="lbPath" layoutX="29.0" layoutY="413.0" prefHeight="31.0" prefWidth="211.0" text="path to db file" />
     </children>
 </AnchorPane>

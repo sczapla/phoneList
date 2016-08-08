@@ -5,44 +5,27 @@
  */
 package com.sczapla.phonelist;
 
+import java.io.File;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.charset.Charset;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.OpenOption;
+import static java.nio.file.StandardOpenOption.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import javafx.collections.ObservableList;
 
 public class FileReader {
 
-    private URI uri;
-
     public FileReader() {
-        try {
-            uri = getClass().getResource("/phoneList.csv").toURI();
-            Map<String, String> env = new HashMap<>();
-            env.put("create", "true");
-            FileSystem zipfs = FileSystems.newFileSystem(uri, env);
-        } catch (IOException ex) {
-            Logger.getLogger(FileReader.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (URISyntaxException ex2) {
-            Logger.getLogger(FileReader.class.getName()).log(Level.SEVERE, null, ex2);
-        }
     }
 
-    public List<User> readPhoneList() throws Exception {
+    public List<User> readPhoneList(File file) throws Exception {
         List<User> list = new ArrayList<>();
-        try (Stream<String> stream = Files.lines(Paths.get(uri))) {
+        try (Stream<String> stream = Files.lines(file.toPath())) {
             list = stream.map(s -> new User(s))
                     .collect(Collectors.toList());
         } catch (IOException e) {
@@ -50,8 +33,14 @@ public class FileReader {
         }
         return list;
     }
-    
-    public void writePhoneList(){
-        
+
+    public void writePhoneList(File file, ObservableList<User> userList) {
+        try {
+            List<String> lista = userList.stream().map(s -> (s.getName() + "," + s.getPhone())).collect(Collectors.toList());
+            OpenOption[] options = new OpenOption[] { WRITE, TRUNCATE_EXISTING };
+            Files.write(file.toPath(), lista, options);
+        } catch (Exception ex) {
+            Logger.getLogger(FileReader.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

@@ -22,12 +22,6 @@ public class MainApp extends Application {
         stage.setTitle("JavaFX and Maven");
         stage.setScene(scene);
         stage.show();
-        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-          @Override
-          public void handle(WindowEvent we) {
-              System.out.println("Stage is closing");
-          }
-      });  
     }
 
     /**

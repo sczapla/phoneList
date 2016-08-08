@@ -1,7 +1,8 @@
 package com.sczapla.phonelist;
 
+import java.io.File;
 import java.net.URL;
-import java.util.List;
+import static java.nio.file.Files.list;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -11,10 +12,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.FileChooser;
 
 public class FXMLController implements Initializable {
 
@@ -35,14 +36,32 @@ public class FXMLController implements Initializable {
 
     @FXML
     private TextField txInfo;
+    
+    @FXML
+    private Button btOpen;
+    
+    @FXML
+    private Label lbPath;
+    
+    private File dbFile;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        try {
+    }
+    
+    @FXML
+    private void openFile(ActionEvent event) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Resource File");
+        dbFile = fileChooser.showOpenDialog(null);
+        if(dbFile != null){
+            lbPath.setText(dbFile.getPath());
             ObservableList<User> list = tabList.getItems();
-            list.addAll(reader.readPhoneList());
-        } catch (Exception ex) {
-            Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
+            try {
+                list.addAll(reader.readPhoneList(dbFile));
+            } catch (Exception ex) {
+                Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 
@@ -52,7 +71,7 @@ public class FXMLController implements Initializable {
         User user = new User(txName.getText(), txPhone.getText());
         tabList.getItems().add(user);
         tabList.refresh();
-
+        reader.writePhoneList(dbFile, tabList.getItems());
     }
 
     @FXML
@@ -65,6 +84,7 @@ public class FXMLController implements Initializable {
             user.setName(txName.getText());
             user.setPhone(txPhone.getText());
             tabList.refresh();
+            reader.writePhoneList(dbFile, tabList.getItems());
         } catch (ArrayIndexOutOfBoundsException e) {
             txInfo.setText("Nie wybrano użytkownika do aktualizacji.");
         }
@@ -77,6 +97,8 @@ public class FXMLController implements Initializable {
         try {
             int index = tabList.getSelectionModel().getSelectedIndex();
             lista.remove(index);
+            tabList.refresh();
+            reader.writePhoneList(dbFile, tabList.getItems());
         } catch (ArrayIndexOutOfBoundsException e) {
             txInfo.setText("Nie wybrano użytkownika do usunięcia");
         }
@@ -88,10 +110,5 @@ public class FXMLController implements Initializable {
         User user = (User) tabList.getSelectionModel().getSelectedItem();
         txName.setText(user.getName());
         txPhone.setText(user.getPhone());
-    }
-
-    @FXML
-    public void exitApplication(ActionEvent event) {
-        System.out.println("Stage is closing2");
     }
 }
